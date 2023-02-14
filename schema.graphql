@@ -1,0 +1,28 @@
+type SeacowsFactory @entity {
+  id: ID!
+
+  # pair info
+  pairCount: Int!
+}
+
+type Token @entity {
+  id: ID!
+
+  # mirrored from the smart contract
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+}
+
+type Collection @entity {
+  id: ID!
+
+  # mirrored from the smart contract
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+}
+
+type Pair @entity {
+  id: ID!
+}

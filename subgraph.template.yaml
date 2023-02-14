@@ -1,0 +1,57 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SeacowsPairFactory
+    network: {{ network }}
+    source:
+      address: "{{ factory.address }}"
+      abi: SeacowsPairFactory
+      # startBlock: "{{ factory.startBlock }}"
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - SeacowsFactory
+        - Token
+        - Pair
+      abis:
+        - name: SeacowsPairFactory
+          file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairFactory.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mappings/factory.ts
+
+
+templates:
+  - name: SeacowsPair
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Exchange
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/pair.ts
+      entities:
+        - Exchange
+      abis:
+        - name: SeacowsPair
+          file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPair.json
+        - name: SeacowsPairETH
+          file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairETH.json
+        - name: SeacowsPairERC20
+          file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairERC20.json
+      eventHandlers:
+        - event: TokenPurchase(address,uint256,uint256)
+          handler: handleTokenPurchase
+        - event: EthPurchase(address,uint256,uint256)
+          handler: handleEthPurchase
+        - event: AddLiquidity(address,uint256,uint256)
+          handler: handleAddLiquidity
+        - event: RemoveLiquidity(address,uint256,uint256)
+          handler: handleRemoveLiquidity
