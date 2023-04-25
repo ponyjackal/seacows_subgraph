@@ -335,10 +335,10 @@
   dependencies:
     "@types/node" "*"
 
-"@yolominds/seacows-amm-foundry@^1.0.3":
-  version "1.0.3"
-  resolved "https://npm.pkg.github.com/download/@yolominds/seacows-amm-foundry/1.0.3/c03e625b17dd3679d65b78885ecbdd7436d4e0e9#c03e625b17dd3679d65b78885ecbdd7436d4e0e9"
-  integrity sha512-39TiCukaH05+bxnaUl53z2nVIjJc5wOhMgjMG9zsf7xmnrf33OCCbbqwOgNLlEpXfP4fZDPIt1/syW8kyw4Nvg==
+"@yolominds/seacows-amm-foundry@^1.1.5":
+  version "1.1.5"
+  resolved "https://npm.pkg.github.com/download/@yolominds/seacows-amm-foundry/1.1.5/0a4cf18719cdc7ac3865443f28640552b08f0297#0a4cf18719cdc7ac3865443f28640552b08f0297"
+  integrity sha512-+Xd3egiOky9wLf2JbAJcZoRn2c3Mr21WxwPVMQga8Qi19b3KCLxruYciVlgs7uHUPMg2nNnuwkIhlPBcEATArg==
   dependencies:
     hardhat-preprocessor "^0.1.5"
 

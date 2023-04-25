@@ -4,20 +4,20 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ seacows/seacows-amm-subgraph",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ seacows/seacows-subgraph",
     "prepare:local": "mustache config/dev/goerli.json subgraph.template.yaml > subgraph.yaml",
-    "create:local": "graph create --node http://localhost:8020/ seacows/seacows-amm-subgraph",
-    "remove:local": "graph remove --node http://localhost:8020/ seacows/seacows-amm-subgraph",
-    "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 seacows/seacows-amm-subgraph",
+    "create:local": "graph create --node http://localhost:8020/ seacows/seacows-subgraph",
+    "remove:local": "graph remove --node http://localhost:8020/ seacows/seacows-subgraph",
+    "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 seacows/seacows-subgraph",
     "prepare:dev": "mustache config/dev.json subgraph.template.yaml > subgraph.yaml",
-    "create:dev:goerli": "graph create --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-amm-subgraph",
-    "deploy:dev:goerli": "graph deploy --node https://subgraph-goerli-dev.seacows.io/deploy --ipfs https://ipfs-dev.seacows.io seacows/seacows-amm-subgraph",
-    "remove:dev:goerli": "graph remove --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-amm-subgraph"
+    "create:dev:goerli": "graph create --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-subgraph",
+    "deploy:dev:goerli": "graph deploy --node https://subgraph-goerli-dev.seacows.io/deploy --ipfs https://ipfs-dev.seacows.io seacows/seacows-subgraph",
+    "remove:dev:goerli": "graph remove --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-subgraph"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",
     "@graphprotocol/graph-ts": "^0.27.0",
-    "@yolominds/seacows-amm-foundry": "^1.0.3"
+    "@yolominds/seacows-amm-foundry": "^1.1.5"
   },
   "devDependencies": {
     "matchstick-as": "^0.5.0",
