@@ -1,0 +1,65 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SeacowsPositionManager
+    network: {{ network }}
+    source:
+      address: "{{ manager.address }}"
+      abi: SeacowsPositionManager
+      startBlock: {{ manager.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - SeacowsPositionManager
+        - Token
+        - Pair
+      abis:
+        - name: SeacowsPositionManager
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/seacows-amm/SeacowsPositionManager.json
+        - name: Token
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/common/ERC20.json
+        - name: Collection
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/common/ERC721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TransferValue(indexed uint256,indexed uint256,uint256)
+          handler: handleTransferValue
+        - event: PairCreated(indexed address,indexed address,indexed uint112,uint256,address)
+          handler: handlePairCreated
+      file: ./src/mappings/manager.ts
+
+
+# templates:
+#   - name: SeacowsPair
+#     kind: ethereum/contract
+#     network: {{ network }}
+#     source:
+#       abi: Exchange
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.6
+#       language: wasm/assemblyscript
+#       file: ./src/mappings/pair.ts
+#       entities:
+#         - Exchange
+#       abis:
+#         - name: SeacowsPair
+#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPair.json
+#         - name: SeacowsPairETH
+#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairETH.json
+#         - name: SeacowsPairERC20
+#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairERC20.json
+#       eventHandlers:
+#         - event: TokenPurchase(address,uint256,uint256)
+#           handler: handleTokenPurchase
+#         - event: EthPurchase(address,uint256,uint256)
+#           handler: handleEthPurchase
+#         - event: AddLiquidity(address,uint256,uint256)
+#           handler: handleAddLiquidity
+#         - event: RemoveLiquidity(address,uint256,uint256)
+#           handler: handleRemoveLiquidity

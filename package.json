@@ -1,26 +1,13 @@
 {
-  "name": "@yolominds/seacows-subgraph",
-  "license": "UNLICENSED",
+  "name": "seacows-subgraph",
+  "version": "1.1.0",
+  "private": "true",
+  "license": "MIT",
   "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ seacows/seacows-subgraph",
-    "prepare:local": "mustache config/dev/goerli.json subgraph.template.yaml > subgraph.yaml",
-    "create:local": "graph create --node http://localhost:8020/ seacows/seacows-subgraph",
-    "remove:local": "graph remove --node http://localhost:8020/ seacows/seacows-subgraph",
-    "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 seacows/seacows-subgraph",
-    "prepare:dev": "mustache config/dev.json subgraph.template.yaml > subgraph.yaml",
-    "create:dev:goerli": "graph create --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-subgraph",
-    "deploy:dev:goerli": "graph deploy --node https://subgraph-goerli-dev.seacows.io/deploy --ipfs https://ipfs-dev.seacows.io seacows/seacows-subgraph",
-    "remove:dev:goerli": "graph remove --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-subgraph"
+    "build": "yarn workspaces run build",
+    "release": "npx standard-version --message 'chore(release): %s\n\n[skip ci]' --no-verify"
   },
-  "dependencies": {
-    "@graphprotocol/graph-cli": "0.30.4",
-    "@graphprotocol/graph-ts": "^0.27.0",
-    "@yolominds/seacows-amm-foundry": "^1.1.5"
-  },
-  "devDependencies": {
-    "matchstick-as": "^0.5.0",
-    "mustache": "^4.2.0"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -1,0 +1,11 @@
+{
+  "network": "mumbai",
+  "template": {
+    "address": "0x1E822838B3CfEcFb50F99fD28279651040229FA5",
+    "startBlock": 35363881
+  },
+  "manager": {
+    "address": "0x94B0505E21e12b9eC428a2CAC68348e2aE22c474",
+    "startBlock": 35363881
+  }
+}

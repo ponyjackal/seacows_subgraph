@@ -18,7 +18,7 @@ services:
       postgres_pass: admin123
       postgres_db: graph-node
       ipfs: 'ipfs:5001'
-      ethereum: 'goerli:https://eth-goerli.g.alchemy.com/v2/BSnT82uFD5My3V_KeWWm9fOgq_E3CTmX'
+      ethereum: 'mumbai:https://polygon-mumbai.g.alchemy.com/v2/THNAV_YQRlVGVAVI9lq5Q0tl0T88rMi9'
       RUST_LOG: info
   ipfs:
     image: ipfs/go-ipfs:v0.10.0

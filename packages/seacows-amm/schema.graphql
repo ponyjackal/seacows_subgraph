@@ -1,0 +1,39 @@
+type SeacowsPositionManager @entity {
+  id: ID!
+
+  # pair info
+  pairCount: Int!
+}
+
+type Position @entity {
+  id: ID!
+  owner: User!
+  liquidity: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: BigInt!
+}
+
+type Collection @entity {
+  id: ID!
+
+  symbol: String!
+  name: String!
+}
+
+type Pair @entity {
+  id: ID!
+  token: Token!
+  collection: Collection!
+  fee: BigInt
+  slot: BigInt
+}
+
+type User @entity {
+  id: ID!
+  positions: [Position!] @derivedFrom(field: "owner")
+}
