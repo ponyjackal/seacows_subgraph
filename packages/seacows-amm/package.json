@@ -1,5 +1,5 @@
 {
-  "name": "seacows-amm-subgraph",
+  "name": "seacows-amm",
   "version": "1.0.0",
   "license": "UNLICENSED",
   "scripts": {
@@ -22,7 +22,7 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.49.0",
     "@graphprotocol/graph-ts": "^0.30.0",
-    "@yolominds/seacows-sdk": "^1.2.0"
+    "@yolominds/seacows-sdk": "^1.3.1"
   },
   "devDependencies": {
     "@types/mustache": "^4.2.2",

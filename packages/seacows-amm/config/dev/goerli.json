@@ -1,7 +1,11 @@
 {
   "network": "goerli",
-  "factory": {
-    "address":"0x3e63b20118c776b9E8366eC8D45f07716F0D1955",
-    "startBlock": 8163373
+  "template": {
+    "address": "0x8A9099b639a685fE828Fcc372E3C2BeAc571b90C",
+    "startBlock": 8975000
+  },
+  "manager": {
+    "address": "0x2fD7765c56c9D22EC070773D26fa24D73E928B14",
+    "startBlock": 8975000
   }
 }

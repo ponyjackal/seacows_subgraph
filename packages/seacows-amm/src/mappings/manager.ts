@@ -7,8 +7,9 @@ import {
 } from "../../generated/SeacowsPositionManager/SeacowsPositionManager";
 import { Token as TokenContract } from "../../generated/SeacowsPositionManager/Token";
 import { Collection as CollectionContract } from "../../generated/SeacowsPositionManager/Collection";
-import { Collection, Pair, Token, Position, User } from "../../generated/schema";
-import { ADDRESS_ZERO } from "../constants";
+import { Collection, Pool, Token, Position, User } from "../../generated/schema";
+import { Pool as PoolTemplate, Collection as CollectionTemplate } from "../../generated/templates";
+import { ZERO_BI } from "../constants";
 
 export function handleTransfer(event: Transfer): void {
   const _from = event.params._from;
@@ -60,8 +61,9 @@ export function handlePairCreated(event: PairCreated): void {
   const _collection = event.params.collection;
   const _fee = event.params.fee;
   const _slot = event.params.slot;
+  const _pair = event.params.pair;
 
-  let pair = new Pair(event.params.pair.toHexString());
+  let pool = new Pool(_pair.toHexString());
 
   let token = Token.load(_token.toHexString());
   if (token === null) {
@@ -71,7 +73,7 @@ export function handlePairCreated(event: PairCreated): void {
     token.name = tokenContract.name();
     token.symbol = tokenContract.symbol();
     token.decimals = BigInt.fromI32(tokenContract.decimals());
-    token.save();
+    token.txCount = ZERO_BI;
   }
 
   let collection = Collection.load(_collection.toHexString());
@@ -81,12 +83,19 @@ export function handlePairCreated(event: PairCreated): void {
     collection = new Collection(_collection.toHexString());
     collection.name = collectionContract.name();
     collection.symbol = collectionContract.symbol();
-    collection.save();
+    collection.txCount = ZERO_BI;
   }
 
-  pair.token = token.id;
-  pair.collection = collection.id;
-  pair.fee = _fee;
-  pair.slot = _slot;
-  pair.save();
+  pool.token = token.id;
+  pool.collection = collection.id;
+  pool.liquidity = ZERO_BI;
+  pool.fee = _fee;
+  pool.slot = _slot;
+  pool.txCount = ZERO_BI;
+
+  pool.save();
+  PoolTemplate.create(_pair);
+  token.save();
+  collection.save();
+  CollectionTemplate.create(_collection);
 }

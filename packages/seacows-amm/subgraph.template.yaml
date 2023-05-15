@@ -16,7 +16,8 @@ dataSources:
       entities:
         - SeacowsPositionManager
         - Token
-        - Pair
+        - Pool
+        - Collection
       abis:
         - name: SeacowsPositionManager
           file: ../../node_modules/@yolominds/seacows-sdk/abis/seacows-amm/SeacowsPositionManager.json
@@ -34,32 +35,46 @@ dataSources:
       file: ./src/mappings/manager.ts
 
 
-# templates:
-#   - name: SeacowsPair
-#     kind: ethereum/contract
-#     network: {{ network }}
-#     source:
-#       abi: Exchange
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.6
-#       language: wasm/assemblyscript
-#       file: ./src/mappings/pair.ts
-#       entities:
-#         - Exchange
-#       abis:
-#         - name: SeacowsPair
-#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPair.json
-#         - name: SeacowsPairETH
-#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairETH.json
-#         - name: SeacowsPairERC20
-#           file: node_modules/@yolominds/seacows-amm-foundry/dist/abis/SeacowsPairERC20.json
-#       eventHandlers:
-#         - event: TokenPurchase(address,uint256,uint256)
-#           handler: handleTokenPurchase
-#         - event: EthPurchase(address,uint256,uint256)
-#           handler: handleEthPurchase
-#         - event: AddLiquidity(address,uint256,uint256)
-#           handler: handleAddLiquidity
-#         - event: RemoveLiquidity(address,uint256,uint256)
-#           handler: handleRemoveLiquidity
+templates:
+  - name: Pool
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Pool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Pool
+      abis:
+        - name: Pool
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/seacows-amm/SeacowsERC721TradePair.json
+      eventHandlers:
+        - event: Sync(uint112,uint112)
+          handler: handleSync
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+          handler: handleSwap
+        - event: Mint(indexed address,uint256,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256,uint256,indexed address)
+          handler: handleBurn
+      file: ./src/mappings/pool.ts
+  - name: Collection
+    kind: ethereum/contract
+    network: {{ network }}
+    source:
+      abi: Collection
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+      abis:
+        - name: Collection
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/common/ERC721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/mappings/collection.ts

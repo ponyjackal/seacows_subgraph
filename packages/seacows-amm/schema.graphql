@@ -1,8 +1,8 @@
 type SeacowsPositionManager @entity {
   id: ID!
 
-  # pair info
-  pairCount: Int!
+  # pool info
+  poolCount: BigInt!
 }
 
 type Position @entity {
@@ -16,6 +16,17 @@ type Token @entity {
   name: String!
   symbol: String!
   decimals: BigInt!
+
+  txCount: BigInt!
+}
+
+type NFT @entity {
+  # Pair Address + "-" + Token ID
+  id: ID!
+  tokenId: BigInt!
+  collection: Collection!
+  tokenURI: String!
+  pool: Pool
 }
 
 type Collection @entity {
@@ -23,17 +34,89 @@ type Collection @entity {
 
   symbol: String!
   name: String!
+
+  txCount: BigInt!
 }
 
-type Pair @entity {
+type Pool @entity {
   id: ID!
   token: Token!
   collection: Collection!
   fee: BigInt
   slot: BigInt
+
+  txCount: BigInt!
+  liquidity: BigInt!
+
+  nfts: [NFT!]! @derivedFrom(field: "pool")
+
+  mints: [Mint!]! @derivedFrom(field: "pool")
+  burns: [Burn!]! @derivedFrom(field: "pool")
+  swaps: [Swap!]! @derivedFrom(field: "pool")
 }
 
 type User @entity {
   id: ID!
   positions: [Position!] @derivedFrom(field: "owner")
+}
+
+type Transaction @entity {
+  # txn hash
+  id: ID!
+  timestamp: BigInt!
+  # block txn was included in
+  blockNumber: BigInt!
+
+  mints: [Mint]! @derivedFrom(field: "transaction")
+  burns: [Burn]! @derivedFrom(field: "transaction")
+  swaps: [Swap]! @derivedFrom(field: "transaction")
+}
+
+type Mint @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID!
+  pool: Pool!
+  transaction: Transaction!
+  timestamp: BigInt!
+
+  token: Token!
+  collection: Collection!
+
+  sender: Bytes!
+
+  tokenAmount: BigDecimal!
+  nftAmount: BigDecimal!
+}
+
+type Burn @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID!
+  pool: Pool!
+  transaction: Transaction!
+  timestamp: BigInt!
+
+  token: Token!
+  collection: Collection!
+
+  sender: Bytes!
+
+  tokenAmount: BigDecimal!
+  nftAmount: BigDecimal!
+}
+
+type Swap @entity {
+  # transaction hash + "#" + index in mints Transaction array
+  id: ID!
+  pool: Pool!
+
+  transaction: Transaction!
+  timestamp: BigInt!
+
+  token: Token!
+  collection: Collection!
+
+  sender: Bytes!
+
+  tokenAmount: BigDecimal!
+  nftAmount: BigDecimal!
 }

@@ -1,0 +1,45 @@
+# Ref: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages#publishing-packages-to-github-packages
+name: Deploy to Dev
+on:
+  push:
+    branches:
+    - dev
+    paths:
+      - packages/seacows-amm/**
+# concurrency: 
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    permissions: 
+      contents: write
+      packages: write 
+    steps:
+    - name: Checkout code from repo
+      uses: actions/checkout@master
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: "18.x"
+        registry-url: "https://npm.pkg.github.com"
+        # Defaults to the user or organization that owns the workflow file
+        scope: "@yolominds"
+
+    - name: install modules
+      run: yarn install
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      # env:
+      #   NODE_AUTH_TOKEN: ${{ github.token }}
+
+    - name: Deploy Goerli
+      run: |
+        yarn workspace seacows-amm prepare:dev:goerli
+        yarn workspace seacows-amm build
+        yarn workspace seacows-amm deploy:dev:goerli
+
