@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "license": "UNLICENSED",
   "scripts": {
+    "prepare": "sh -c 'mustache config/${0}/${1}.json subgraph.template.yaml > subgraph.yaml'",
+    "create:dev": "sh -c 'graph create --node http://graph-node-${0}-${1}.graph-node-${0}-${1}:8020 --ipfs https://ipfs-${0}.seacows.io seacows/seacows-amm-subgraph'",
+    "deploy:dev": "sh -c 'graph deploy --node http://graph-node-${0}-${1}.graph-node-${0}-${1}:8020 --ipfs https://ipfs-${0}.seacows.io seacows/seacows-amm-subgraph'",
     "codegen": "graph codegen",
     "build": "yarn codegen && graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ seacows/seacows-amm-subgraph",
