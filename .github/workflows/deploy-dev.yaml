@@ -14,6 +14,9 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
+      - name: Checkout code from repo
+        uses: actions/checkout@master
+
       - name: seacows-bot-install token
         id: seacows-bot
         uses: getsentry/action-github-app-token@v1
@@ -28,8 +31,6 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: "@yolominds"
 
-      - name: Checkout code from repo
-        uses: actions/checkout@master
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -47,7 +48,7 @@ jobs:
           ECR_REPOSITORY: graph-node-deployer-goerli-dev
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG packages/seacows-amm/ --build-arg github_token=${{ secrets.READ_WRITE_GITHUB_PACKAGES_SECRET }}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg NPM_TOKEN=${{ secrets.NPM_AUTH_TOKEN }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # Reserve for Mumbai
@@ -71,17 +72,29 @@ jobs:
         uses: imranismail/setup-kustomize@v1
         with:
           kustomize-version: "3.6.1"
-      - name: Run kustomize
+      - name: "[Goerli] Run kustomize"
         env:
-          IMAGE_NAME: seacows-backend
-          NEW_IMAGE_NAME: 740358724789.dkr.ecr.ap-southeast-1.amazonaws.com/seacows-backend-dev
+          IMAGE_NAME: graph-node-deployer
+          NEW_IMAGE_NAME: 740358724789.dkr.ecr.ap-southeast-1.amazonaws.com/graph-node-deployer-goerli-dev
           NEW_IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd services/seacows-backend/overlays/dev
+          cd services/graph-node/overlays/dev/goerli
           kustomize edit set image $IMAGE_NAME=$NEW_IMAGE_NAME:$NEW_IMAGE_TAG
+
+      # - name: "[Mumbai] Run kustomize"
+      #   env:
+      #     IMAGE_NAME: graph-node-deployer
+      #     NEW_IMAGE_NAME: 740358724789.dkr.ecr.ap-southeast-1.amazonaws.com/graph-node-deployer-dev-goerli
+      #     NEW_IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     cd services/graph-node-deployer/overlays/dev/goerli
+      #     kustomize edit set image $IMAGE_NAME=$NEW_IMAGE_NAME:$NEW_IMAGE_TAG
+
+      - name: Git config
+        run: |
           git config --local user.email "tech@seacows.io"
           git config --local user.name "Seacows Bot"
-          git commit -am "chore(release-dev): deploy seacows-backend to dev"
+          git commit -am "chore(release-dev): deploy graph-node-deployer to dev"
 
       - name: Push updated version to master
         uses: ad-m/github-push-action@master

@@ -20,7 +20,7 @@ dataSources:
         - Collection
       abis:
         - name: SeacowsPositionManager
-          file: ../../node_modules/@yolominds/seacows-sdk/abis/seacows-amm/SeacowsPositionManager.json
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/amm/SeacowsPositionManager.json
         - name: Token
           file: ../../node_modules/@yolominds/seacows-sdk/abis/common/ERC20.json
         - name: Collection
@@ -49,7 +49,7 @@ templates:
         - Pool
       abis:
         - name: Pool
-          file: ../../node_modules/@yolominds/seacows-sdk/abis/seacows-amm/SeacowsERC721TradePair.json
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/amm/SeacowsERC721TradePair.json
       eventHandlers:
         - event: Sync(uint112,uint112)
           handler: handleSync

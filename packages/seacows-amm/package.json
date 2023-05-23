@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "license": "UNLICENSED",
   "scripts": {
-    "prepare": "sh -c 'mustache config/${0}/${1}.json subgraph.template.yaml > subgraph.yaml'",
-    "create:dev": "sh -c 'graph create --node http://graph-node-${0}-${1}.graph-node-${0}-${1}:8020 --ipfs https://ipfs-${0}.seacows.io seacows/seacows-amm-subgraph'",
-    "deploy:dev": "sh -c 'graph deploy --node http://graph-node-${0}-${1}.graph-node-${0}-${1}:8020 --ipfs https://ipfs-${0}.seacows.io seacows/seacows-amm-subgraph'",
     "codegen": "graph codegen",
     "build": "yarn codegen && graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ seacows/seacows-amm-subgraph",
     "prepare:local": "mustache config/dev/mumbai.json subgraph.template.yaml > subgraph.yaml",
     "create:local": "graph create --node http://localhost:8020/ seacows/seacows-amm-subgraph",
     "remove:local": "graph remove --node http://localhost:8020/ seacows/seacows-amm-subgraph",
@@ -25,7 +21,7 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.49.0",
     "@graphprotocol/graph-ts": "^0.30.0",
-    "@yolominds/seacows-sdk": "^1.3.1"
+    "@yolominds/seacows-sdk": "^1.5.3"
   },
   "devDependencies": {
     "@types/mustache": "^4.2.2",
