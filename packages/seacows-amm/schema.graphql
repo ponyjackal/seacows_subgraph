@@ -8,6 +8,8 @@ type SeacowsPositionManager @entity {
 type Position @entity {
   id: ID!
   owner: User!
+  slot: BigInt!
+  pool: Pool!
   liquidity: BigInt!
 }
 

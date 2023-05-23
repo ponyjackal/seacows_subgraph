@@ -15,6 +15,7 @@ export function handleTransfer(event: Transfer): void {
   const _from = event.params._from;
   const _to = event.params._to;
   const _tokenId = event.params._tokenId;
+  const _pair = event.address;
 
   let fromUser = User.load(_from.toHexString());
   if (fromUser === null) {
@@ -35,6 +36,8 @@ export function handleTransfer(event: Transfer): void {
   const manager = SeacowsPositionManagerContract.bind(event.address);
   position.owner = manager.ownerOf(_tokenId).toHexString();
   position.liquidity = manager.balanceOf1(_tokenId);
+  position.slot = manager.slotOf(_tokenId);
+  position.pool = _pair.toHexString();
   position.save();
 }
 
