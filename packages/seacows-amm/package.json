@@ -10,13 +10,13 @@
     "remove:local": "graph remove --node http://localhost:8020/ seacows/seacows-amm-subgraph",
     "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 seacows/seacows-amm-subgraph",
     "prepare:dev:goerli": "mustache config/dev/goerli.json subgraph.template.yaml > subgraph.yaml",
-    "create:dev:goerli": "graph create --node http://graph-node-goerli-dev.graph-node-goerli-dev:8020 seacows/seacows-amm-subgraph",
-    "deploy:dev:goerli": "graph deploy --node http://graph-node-goerli-dev.graph-node-goerli-dev:8020 --ipfs https://ipfs-dev.seacows.io seacows/seacows-amm-subgraph",
-    "remove:dev:goerli": "graph remove --node http://graph-node-goerli-dev.graph-node-goerli-dev:8020 seacows/seacows-amm-subgraph",
+    "create:dev:goerli": "graph create --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-amm-subgraph",
+    "deploy:dev:goerli": "graph deploy --node https://subgraph-goerli-dev.seacows.io/deploy --ipfs https://ipfs-dev.seacows.io seacows/seacows-amm-subgraph",
+    "remove:dev:goerli": "graph remove --node https://subgraph-goerli-dev.seacows.io/deploy seacows/seacows-amm-subgraph",
     "prepare:dev:mumbai": "mustache config/dev/mumbai.json subgraph.template.yaml > subgraph.yaml",
-    "create:dev:mumbai": "graph create --node http://graph-node-mumbai-dev.graph-node-mumbai-dev:8020 seacows/seacows-amm-subgraph",
-    "deploy:dev:mumbai": "graph deploy --node http://graph-node-mumbai-dev.graph-node-mumbai-dev:8020 --ipfs https://ipfs-dev.seacows.io seacows/seacows-amm-subgraph",
-    "remove:dev:mumbai": "graph remove --node http://graph-node-mumbai-dev.graph-node-mumbai-dev:8020 seacows/seacows-amm-subgraph"
+    "create:dev:mumbai": "graph create --node https://subgraph-mumbai-dev.seacows.io/deploy seacows/seacows-amm-subgraph",
+    "deploy:dev:mumbai": "graph deploy --node https://subgraph-mumbai-dev.seacows.io/deploy --ipfs https://ipfs-dev.seacows.io seacows/seacows-amm-subgraph",
+    "remove:dev:mumbai": "graph remove --node https://subgraph-mumbai-dev.seacows.io/deploy seacows/seacows-amm-subgraph"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.49.0",
