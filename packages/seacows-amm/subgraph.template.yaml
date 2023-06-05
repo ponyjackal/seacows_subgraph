@@ -21,6 +21,8 @@ dataSources:
       abis:
         - name: SeacowsPositionManager
           file: ../../node_modules/@yolominds/seacows-sdk/abis/amm/SeacowsPositionManager.json
+        - name: Pool
+          file: ../../node_modules/@yolominds/seacows-sdk/abis/amm/SeacowsERC721TradePair.json
         - name: Token
           file: ../../node_modules/@yolominds/seacows-sdk/abis/common/ERC20.json
         - name: Collection

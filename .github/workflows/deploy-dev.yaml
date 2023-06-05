@@ -3,7 +3,7 @@ name: Deployment to dev
 on:
   push:
     branches:
-      - dev
+      - none
     paths:
       - packages/seacows-amm/**
 jobs:

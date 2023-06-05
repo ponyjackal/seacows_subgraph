@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
+import { BigInt, BigDecimal, ethereum, Address } from "@graphprotocol/graph-ts";
 import { Transaction } from "../../generated/schema";
 import { ZERO_BI, ONE_BI } from "../constants";
 

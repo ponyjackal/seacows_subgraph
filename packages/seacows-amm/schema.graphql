@@ -9,7 +9,7 @@ type Position @entity {
   id: ID!
   owner: User!
   slot: BigInt!
-  pool: Pool!
+  pool: Pool
   liquidity: BigInt!
 }
 
@@ -40,6 +40,13 @@ type Collection @entity {
   txCount: BigInt!
 }
 
+type Slot @entity {
+  # slot
+  id: ID!
+  slot: BigInt!
+  pool: Pool!
+}
+
 type Pool @entity {
   id: ID!
   token: Token!
@@ -51,6 +58,7 @@ type Pool @entity {
   liquidity: BigInt!
 
   nfts: [NFT!]! @derivedFrom(field: "pool")
+  positions: [Position!]! @derivedFrom(field: "pool")
 
   mints: [Mint!]! @derivedFrom(field: "pool")
   burns: [Burn!]! @derivedFrom(field: "pool")

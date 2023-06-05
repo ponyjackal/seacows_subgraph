@@ -5,17 +5,17 @@ import {
   Transfer,
   TransferValue
 } from "../../generated/SeacowsPositionManager/SeacowsPositionManager";
+import { Pool as PoolContract } from "../../generated/SeacowsPositionManager/Pool";
 import { Token as TokenContract } from "../../generated/SeacowsPositionManager/Token";
 import { Collection as CollectionContract } from "../../generated/SeacowsPositionManager/Collection";
-import { Collection, Pool, Token, Position, User } from "../../generated/schema";
+import { Collection, Pool, Slot, Token, Position, User, SeacowsPositionManager } from "../../generated/schema";
 import { Pool as PoolTemplate, Collection as CollectionTemplate } from "../../generated/templates";
-import { ZERO_BI } from "../constants";
+import { ZERO_BI, ADDRESS_ZERO } from "../constants";
 
 export function handleTransfer(event: Transfer): void {
   const _from = event.params._from;
   const _to = event.params._to;
   const _tokenId = event.params._tokenId;
-  const _pair = event.address;
 
   let fromUser = User.load(_from.toHexString());
   if (fromUser === null) {
@@ -33,11 +33,17 @@ export function handleTransfer(event: Transfer): void {
   if (position === null) {
     position = new Position(_tokenId.toString());
   }
+
   const manager = SeacowsPositionManagerContract.bind(event.address);
   position.owner = manager.ownerOf(_tokenId).toHexString();
   position.liquidity = manager.balanceOf1(_tokenId);
   position.slot = manager.slotOf(_tokenId);
-  position.pool = _pair.toHexString();
+
+  // TODO: fetch slot from contract when contract redeployed
+  let slot = Slot.load(position.slot.toString());
+  if (slot !== null) {
+    position.pool = slot.pool;
+  }
   position.save();
 }
 
@@ -66,7 +72,29 @@ export function handlePairCreated(event: PairCreated): void {
   const _slot = event.params.slot;
   const _pair = event.params.pair;
 
+  let manager = SeacowsPositionManager.load(event.address.toHexString());
+  if (manager === null) {
+    manager = new SeacowsPositionManager(event.address.toHexString());
+    manager.poolCount = ZERO_BI;
+  }
+  manager.poolCount = manager.poolCount.plus(BigInt.fromI32(1));
+
   let pool = new Pool(_pair.toHexString());
+
+  let slot = new Slot(_slot.toString());
+  slot.pool = pool.id;
+  slot.slot = _slot;
+
+  const managerContract = SeacowsPositionManagerContract.bind(event.address);
+
+  let position = Position.load(managerContract.tokenOf(_pair).toString());
+  if (position === null) {
+    position = new Position(managerContract.tokenOf(_pair).toString());
+  }
+  position.owner = _pair.toHexString();
+  position.slot = _slot;
+  position.pool = pool.id;
+  position.liquidity = ZERO_BI;
 
   let token = Token.load(_token.toHexString());
   if (token === null) {
@@ -96,7 +124,10 @@ export function handlePairCreated(event: PairCreated): void {
   pool.slot = _slot;
   pool.txCount = ZERO_BI;
 
+  manager.save();
   pool.save();
+  slot.save();
+  position.save();
   PoolTemplate.create(_pair);
   token.save();
   collection.save();
