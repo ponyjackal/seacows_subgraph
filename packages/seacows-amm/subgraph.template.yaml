@@ -59,7 +59,7 @@ templates:
           handler: handleSwap
         - event: Mint(indexed address,uint256,uint256)
           handler: handleMint
-        - event: Burn(indexed address,uint256,uint256,indexed address)
+        - event: Burn(indexed address,uint256,uint256,uint256,uint256,uint256[],indexed address)
           handler: handleBurn
       file: ./src/mappings/pool.ts
   - name: Collection

@@ -1,3 +1,4 @@
+import { BigInt } from "@graphprotocol/graph-ts";
 import { Burn, Collection, Mint, Pool, Swap, Token } from "../../generated/schema";
 import {
   Swap as SwapEvent,
@@ -7,7 +8,7 @@ import {
   Pool as PoolContract
 } from "../../generated/templates/Pool/Pool";
 import { ONE_BI, BI_18 } from "../constants";
-import { convertTokenToDecimal, loadTransaction } from "../utils";
+import { convertTokenToDecimal, convertTokenToInt, loadTransaction } from "../utils";
 
 export function handleSync(event: SyncEvent): void {}
 
@@ -19,7 +20,8 @@ export function handleSwap(event: SwapEvent): void {
   let collection = Collection.load(pool.collection) as Collection;
 
   let tokenAmount = convertTokenToDecimal(event.params.tokenIn.minus(event.params.tokenOut), token.decimals);
-  let nftAmount = convertTokenToDecimal(event.params.nftIn.minus(event.params.nftOut), BI_18);
+  // let nftAmount = convertTokenToDecimal(event.params.nftIn.minus(event.params.nftOut), BI_18);
+  let nftAmount = event.params.nftIn.minus(event.params.nftOut);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);
@@ -56,8 +58,8 @@ export function handleMint(event: MintEvent): void {
   let token = Token.load(pool.token) as Token;
   let collection = Collection.load(pool.collection) as Collection;
 
-  let tokenAmount = convertTokenToDecimal(event.params.amount0, token.decimals);
-  let nftAmount = convertTokenToDecimal(event.params.amount1, BI_18);
+  let tokenAmount = convertTokenToDecimal(event.params.tokenAmount, token.decimals);
+  let nftAmount = convertTokenToInt(event.params.nftAmount, BI_18);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);
@@ -94,8 +96,8 @@ export function handleBurn(event: BurnEvent): void {
   let token = Token.load(pool.token) as Token;
   let collection = Collection.load(pool.collection) as Collection;
 
-  let tokenAmount = convertTokenToDecimal(event.params.amount0, token.decimals);
-  let nftAmount = convertTokenToDecimal(event.params.amount1, BI_18);
+  let tokenAmount = convertTokenToDecimal(event.params.tokenAmountIn, token.decimals);
+  let nftAmount = BigInt.fromI32(event.params.idsOut.length); //convertTokenToInt(event.params.idsOut.length, BI_18);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);

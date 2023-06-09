@@ -95,7 +95,7 @@ type Mint @entity {
   sender: Bytes!
 
   tokenAmount: BigDecimal!
-  nftAmount: BigDecimal!
+  nftAmount: BigInt!
 }
 
 type Burn @entity {
@@ -111,7 +111,7 @@ type Burn @entity {
   sender: Bytes!
 
   tokenAmount: BigDecimal!
-  nftAmount: BigDecimal!
+  nftAmount: BigInt!
 }
 
 type Swap @entity {
@@ -128,5 +128,5 @@ type Swap @entity {
   sender: Bytes!
 
   tokenAmount: BigDecimal!
-  nftAmount: BigDecimal!
+  nftAmount: BigInt!
 }
