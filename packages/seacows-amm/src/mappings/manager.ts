@@ -10,7 +10,8 @@ import { Token as TokenContract } from "../../generated/SeacowsPositionManager/T
 import { Collection as CollectionContract } from "../../generated/SeacowsPositionManager/Collection";
 import { Collection, Pool, Slot, Token, Position, User, SeacowsPositionManager } from "../../generated/schema";
 import { Pool as PoolTemplate, Collection as CollectionTemplate } from "../../generated/templates";
-import { ZERO_BI, ADDRESS_ZERO } from "../constants";
+import { ZERO_BI, ADDRESS_ZERO, ZERO_BD } from "../constants";
+import { getCurrentPrice } from "../utils";
 
 export function handleTransfer(event: Transfer): void {
   const _from = event.params._from;
@@ -123,6 +124,15 @@ export function handlePairCreated(event: PairCreated): void {
   pool.fee = _fee;
   pool.slot = _slot;
   pool.txCount = ZERO_BI;
+
+  pool.price = getCurrentPrice(_pair);
+  pool.priceAt = event.block.timestamp;
+  pool.lastPrice = ZERO_BD;
+  pool.lastPriceAt = ZERO_BI;
+  pool.lastDayPrice = ZERO_BD;
+  pool.lastDayPriceAt = ZERO_BI;
+  pool.lastWeekPrice = ZERO_BD;
+  pool.lastWeekPriceAt = ZERO_BI;
 
   manager.save();
   pool.save();

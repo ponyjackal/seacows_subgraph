@@ -63,6 +63,20 @@ type Pool @entity {
   mints: [Mint!]! @derivedFrom(field: "pool")
   burns: [Burn!]! @derivedFrom(field: "pool")
   swaps: [Swap!]! @derivedFrom(field: "pool")
+
+  # daily snapshots of pool data
+  poolDayData: [PoolDayData!]! @derivedFrom(field: "pool")
+  # weekly snapshots of pool data
+  poolWeekData: [PoolWeekData!]! @derivedFrom(field: "pool")
+
+  price: BigDecimal!
+  priceAt: BigInt!
+  lastPrice: BigDecimal!
+  lastPriceAt: BigInt!
+  lastDayPrice: BigDecimal!
+  lastDayPriceAt: BigInt!
+  lastWeekPrice: BigDecimal!
+  lastWeekPriceAt: BigInt!
 }
 
 type User @entity {
@@ -129,4 +143,28 @@ type Swap @entity {
 
   tokenAmount: BigDecimal!
   nftAmount: BigInt!
+}
+
+# Data accumulated and condensed into day stats for each pool
+type PoolDayData @entity {
+  id: ID!
+  date: Int!
+
+  pool: Pool!
+
+  volume: BigDecimal!
+  price: BigDecimal!
+  priceChange: BigDecimal!
+}
+
+# Data accumulated and condensed into week stats for each pool
+type PoolWeekData @entity {
+  id: ID!
+  week: Int!
+
+  pool: Pool!
+
+  volume: BigDecimal!
+  price: BigDecimal!
+  priceChange: BigDecimal!
 }
