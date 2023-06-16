@@ -106,8 +106,10 @@ type Mint @entity {
   token: Token!
   collection: Collection!
 
+  # sender of the swap
   sender: Bytes!
-
+  # txn origin
+  origin: Bytes! # the EOA that initiated the txn
   tokenAmount: BigDecimal!
   nftAmount: BigInt!
 }
@@ -122,8 +124,10 @@ type Burn @entity {
   token: Token!
   collection: Collection!
 
+  # sender of the swap
   sender: Bytes!
-
+  # txn origin
+  origin: Bytes! # the EOA that initiated the txn
   tokenAmount: BigDecimal!
   nftAmount: BigInt!
 }
@@ -139,8 +143,10 @@ type Swap @entity {
   token: Token!
   collection: Collection!
 
+  # sender of the swap
   sender: Bytes!
-
+  # txn origin
+  origin: Bytes! # the EOA that initiated the txn
   tokenAmount: BigDecimal!
   nftAmount: BigInt!
 }

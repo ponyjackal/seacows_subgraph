@@ -52,6 +52,7 @@ export function handleSwap(event: SwapEvent): void {
   swap.pool = pool.id;
   swap.token = pool.token;
   swap.sender = event.params.sender;
+  swap.origin = event.transaction.from;
   swap.collection = pool.collection;
   swap.tokenAmount = tokenAmount;
   swap.nftAmount = nftAmount;
@@ -138,6 +139,7 @@ export function handleMint(event: MintEvent): void {
   mint.token = pool.token;
   mint.collection = pool.collection;
   mint.sender = event.params.sender;
+  mint.origin = event.transaction.from;
   mint.tokenAmount = tokenAmount;
   mint.nftAmount = nftAmount;
 
@@ -204,6 +206,7 @@ export function handleBurn(event: BurnEvent): void {
   burn.token = pool.token;
   burn.collection = pool.collection;
   burn.sender = event.params.sender;
+  burn.origin = event.transaction.from;
   burn.tokenAmount = tokenAmount;
   burn.nftAmount = nftAmount;
 
