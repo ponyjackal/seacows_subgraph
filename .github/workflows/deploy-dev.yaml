@@ -33,10 +33,12 @@ jobs:
 
       - name: Deploy Goerli
         run: |
-          yarn workspace @yolominds/seacows-amm install
-          yarn workspace @yolominds/seacows-amm run prepare:dev:goerli
-          yarn workspace @yolominds/seacows-amm run build
-          yarn workspace @yolominds/seacows-amm run deploy:dev:goerli
+          yarn workspace @yolominds/seacows-amm-subgraph install
+          yarn workspace @yolominds/seacows-amm-subgraph run prepare:dev:goerli
+          yarn workspace @yolominds/seacows-amm-subgraph run build
+          yarn workspace @yolominds/seacows-amm-subgraph run deploy:dev:goerli
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
 
       # BELOW are for docker deployment
       # - name: Configure AWS credentials
