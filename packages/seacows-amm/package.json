@@ -21,7 +21,7 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.49.0",
     "@graphprotocol/graph-ts": "^0.30.0",
-    "@yolominds/seacows-sdk": "^1.12.0"
+    "@yolominds/seacows-sdk": "^1.15.0"
   },
   "devDependencies": {
     "@types/mustache": "^4.2.2",
