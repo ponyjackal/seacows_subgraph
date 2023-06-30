@@ -1,0 +1,40 @@
+name: "CI"
+
+env:
+  FOUNDRY_PROFILE: "ci"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+
+jobs:
+  ci:
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout code from repo
+        uses: actions/checkout@master
+
+      - name: seacows-bot-install token
+        id: seacows-bot
+        uses: getsentry/action-github-app-token@v1
+        with:
+          app_id: ${{ secrets.SEACOWS_BOT_APP_ID }}
+          private_key: ${{ secrets.SEACOWS_BOT_PRIVATE_KEY }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          registry-url: "https://npm.pkg.github.com"
+          # Defaults to the user or organization that owns the workflow file
+          scope: "@yolominds"
+
+      - name: Build subgraph
+        run: |
+          yarn workspace @yolominds/seacows-amm-subgraph install
+          yarn workspace @yolominds/seacows-amm-subgraph run prepare:dev:goerli
+          yarn workspace @yolominds/seacows-amm-subgraph run build
