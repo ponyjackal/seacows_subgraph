@@ -14,7 +14,8 @@ import {
   convertTokenToInt,
   updatePoolDayData,
   updatePoolWeekData,
-  getCurrentPrice
+  getCurrentPrice,
+  updateAPR
 } from "../utils";
 
 export function handleSync(event: SyncEvent): void {}
@@ -103,6 +104,9 @@ export function handleSwap(event: SwapEvent): void {
 
   poolDayData.save();
   poolWeekData.save();
+
+  // update apr
+  updateAPR(event);
 }
 
 export function handleMint(event: MintEvent): void {

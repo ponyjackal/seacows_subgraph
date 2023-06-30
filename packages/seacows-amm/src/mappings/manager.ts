@@ -133,6 +133,8 @@ export function handlePairCreated(event: PairCreated): void {
   pool.lastDayPriceAt = ZERO_BI;
   pool.lastWeekPrice = ZERO_BD;
   pool.lastWeekPriceAt = ZERO_BI;
+  pool.createdAt = event.block.timestamp;
+  pool.apr = ZERO_BD;
 
   manager.save();
   pool.save();

@@ -77,6 +77,10 @@ type Pool @entity {
   lastDayPriceAt: BigInt!
   lastWeekPrice: BigDecimal!
   lastWeekPriceAt: BigInt!
+
+  # APR
+  apr: BigDecimal!
+  createdAt: BigInt!
 }
 
 type User @entity {
