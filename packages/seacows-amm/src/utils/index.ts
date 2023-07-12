@@ -1,5 +1,5 @@
 import { BigInt, BigDecimal, ethereum, Address } from "@graphprotocol/graph-ts";
-import { Transaction, Pool, PoolDayData, PoolWeekData } from "../../generated/schema";
+import { Transaction, Pool, PoolDayData, PoolWeekData, PoolYearData, Token } from "../../generated/schema";
 import { Pool as PoolContract } from "../../generated/templates/Pool/Pool";
 import { ZERO_BI, ONE_BI, ZERO_BD, PERCENTAGE_PRECISION } from "../constants";
 
@@ -103,6 +103,34 @@ export function updatePoolWeekData(event: ethereum.Event): PoolWeekData {
   return poolWeekData as PoolWeekData;
 }
 
+export function updatePoolYearData(event: ethereum.Event): PoolYearData {
+  const timestamp = event.block.timestamp.toI32();
+  const yearID = timestamp / (86400 * 7 * 365);
+  const yearStartTimestamp = yearID * 86400 * 7 * 365;
+  const yearPoolID = event.address
+    .toHexString()
+    .concat("-")
+    .concat(yearID.toString());
+
+  const pool = Pool.load(event.address.toHexString()) as Pool;
+  let poolYearData = PoolYearData.load(yearPoolID);
+  if (poolYearData === null) {
+    poolYearData = new PoolYearData(yearPoolID);
+    poolYearData.year = yearStartTimestamp;
+    poolYearData.pool = pool.id;
+    poolYearData.volume = ZERO_BD;
+    poolYearData.price = ZERO_BD;
+    poolYearData.priceChange = ZERO_BD;
+  }
+
+  // update current price
+  poolYearData.price = getCurrentPrice(event.address);
+
+  poolYearData.save();
+
+  return poolYearData as PoolYearData;
+}
+
 export function getCurrentPrice(poolAddress: Address): BigDecimal {
   const poolContract = PoolContract.bind(poolAddress);
   const reserve = poolContract.getReserves();
@@ -116,41 +144,34 @@ export function getCurrentPrice(poolAddress: Address): BigDecimal {
 
 export function updateAPR(event: ethereum.Event): void {
   const timestamp = event.block.timestamp.toI32();
-  const dayID = timestamp / 86400;
-  const yearAgoDayId = timestamp / 86400 - 365;
+  const yearId = timestamp / (86400 * 7 * 365);
   const pool = Pool.load(event.address.toHexString()) as Pool;
 
   const poolContract = PoolContract.bind(event.address);
-  const feePercentage = poolContract.fee();
+  const feePercentage = poolContract.feePercent();
 
   let totalVolume: BigDecimal = ZERO_BD;
 
-  for (let i = dayID; i > yearAgoDayId; i--) {
-    const dayPoolID = event.address
-      .toHexString()
-      .concat("-")
-      .concat(i.toString());
+  const yearPoolID = event.address
+    .toHexString()
+    .concat("-")
+    .concat(yearId.toString());
 
-    let poolDayData = PoolDayData.load(dayPoolID);
-    if (poolDayData) {
-      totalVolume = totalVolume.plus(poolDayData.volume);
-    }
+  let poolYearData = PoolYearData.load(yearPoolID);
+  if (poolYearData) {
+    totalVolume = poolYearData.volume;
   }
+
+  let token = Token.load(pool.token) as Token;
   // on smart contract, percentage precision is 10 ** 4
   const totalFee = totalVolume
     .times(BigDecimal.fromString(feePercentage.toString()))
-    .div(BigDecimal.fromString("10000"))
-    .div(PERCENTAGE_PRECISION);
-  const totalValueLocked = BigDecimal.fromString(pool.liquidity.toString()).times(BigDecimal.fromString("2"));
-  const operationPeriod = event.block.timestamp.minus(pool.createdAt).toI32() / 86400;
-  const operationYearPeriod = operationPeriod > 365 ? 365 : operationPeriod;
+    .div(BigDecimal.fromString("10000"));
+  const totalValueLocked = convertTokenToDecimal(pool.liquidity, token.decimals).times(BigDecimal.fromString("2"));
 
-  const apr = totalFee
-    .times(BigDecimal.fromString(operationYearPeriod.toString()))
-    .div(totalValueLocked)
-    .div(BigDecimal.fromString("365"));
-
-  pool.apr = apr;
+  pool.totalVolume = totalVolume;
+  pool.totalFee = totalFee;
+  pool.totalValueLocked = totalValueLocked;
 
   pool.save();
 }

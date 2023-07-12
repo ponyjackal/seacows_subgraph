@@ -68,6 +68,8 @@ type Pool @entity {
   poolDayData: [PoolDayData!]! @derivedFrom(field: "pool")
   # weekly snapshots of pool data
   poolWeekData: [PoolWeekData!]! @derivedFrom(field: "pool")
+  # yearly snapshots of pool data
+  poolYearData: [PoolYearData!]! @derivedFrom(field: "pool")
 
   price: BigDecimal!
   priceAt: BigInt!
@@ -79,8 +81,10 @@ type Pool @entity {
   lastWeekPriceAt: BigInt!
 
   # APR
-  apr: BigDecimal!
   createdAt: BigInt!
+  totalVolume: BigDecimal!
+  totalFee: BigDecimal!
+  totalValueLocked: BigDecimal!
 }
 
 type User @entity {
@@ -175,6 +179,19 @@ type PoolWeekData @entity {
   pool: Pool!
 
   volume: BigDecimal!
+  price: BigDecimal!
+  priceChange: BigDecimal!
+}
+
+# Data accumulated and condensed into year stats for each pool
+type PoolYearData @entity {
+  id: ID!
+  year: Int!
+
+  pool: Pool!
+
+  volume: BigDecimal!
+
   price: BigDecimal!
   priceChange: BigDecimal!
 }

@@ -14,6 +14,7 @@ import {
   convertTokenToInt,
   updatePoolDayData,
   updatePoolWeekData,
+  updatePoolYearData,
   getCurrentPrice,
   updateAPR
 } from "../utils";
@@ -34,6 +35,8 @@ export function handleSwap(event: SwapEvent): void {
   let poolDayData = updatePoolDayData(event);
   // weekly data
   let poolWeekData = updatePoolWeekData(event);
+  // yearly data
+  let poolYearData = updatePoolYearData(event);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);
@@ -96,6 +99,13 @@ export function handleSwap(event: SwapEvent): void {
   } else {
     poolWeekData.priceChange = ZERO_BD;
   }
+  // update yearly data
+  poolYearData.volume = poolYearData.volume.plus(volume);
+  if (!pool.lastWeekPrice.equals(ZERO_BD) && !pool.price.equals(ZERO_BD)) {
+    poolYearData.priceChange = pool.price.times(PERCENTAGE_PRECISION).div(pool.lastWeekPrice);
+  } else {
+    poolYearData.priceChange = ZERO_BD;
+  }
 
   pool.save();
   swap.save();
@@ -104,6 +114,7 @@ export function handleSwap(event: SwapEvent): void {
 
   poolDayData.save();
   poolWeekData.save();
+  poolYearData.save();
 
   // update apr
   updateAPR(event);
@@ -123,6 +134,8 @@ export function handleMint(event: MintEvent): void {
   updatePoolDayData(event);
   // weekly data
   updatePoolWeekData(event);
+  // yearly data
+  updatePoolYearData(event);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);
@@ -174,6 +187,9 @@ export function handleMint(event: MintEvent): void {
   mint.save();
   token.save();
   collection.save();
+
+  // update apr
+  updateAPR(event);
 }
 
 export function handleBurn(event: BurnEvent): void {
@@ -190,6 +206,8 @@ export function handleBurn(event: BurnEvent): void {
   updatePoolDayData(event);
   // weekly data
   updatePoolWeekData(event);
+  // yearly data
+  updatePoolYearData(event);
 
   // update token data
   token.txCount = token.txCount.plus(ONE_BI);
@@ -241,4 +259,7 @@ export function handleBurn(event: BurnEvent): void {
   burn.save();
   token.save();
   collection.save();
+
+  // update apr
+  updateAPR(event);
 }

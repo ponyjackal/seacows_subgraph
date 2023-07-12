@@ -38,3 +38,5 @@ jobs:
           yarn workspace @yolominds/seacows-amm-subgraph install
           yarn workspace @yolominds/seacows-amm-subgraph run prepare:dev:goerli
           yarn workspace @yolominds/seacows-amm-subgraph run build
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
